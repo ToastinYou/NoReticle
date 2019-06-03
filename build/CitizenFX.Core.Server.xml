@@ -6472,9 +6472,19 @@
             Cancels the currently executing event.
             </summary>
         </member>
+        <member name="F:CitizenFX.Core.Native.Hash.CAN_PLAYER_START_COMMERCE_SESSION">
+            <summary>
+            Returns whether or not the specified player has enough information to start a commerce session for.
+            </summary>
+        </member>
         <member name="F:CitizenFX.Core.Native.Hash.CREATE_VEHICLE">
             <summary>
             thisScriptCheck - can be destroyed if it belongs to the calling script.
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.DOES_PLAYER_OWN_SKU">
+            <summary>
+            Requests whether or not the player owns the specified SKU.
             </summary>
         </member>
         <member name="F:CitizenFX.Core.Native.Hash.FREEZE_ENTITY_POSITION">
@@ -6542,6 +6552,16 @@
             Gets whether or not this is the CitizenFX server.
             </summary>
         </member>
+        <member name="F:CitizenFX.Core.Native.Hash.IS_PLAYER_COMMERCE_INFO_LOADED">
+            <summary>
+            Requests whether or not the commerce data for the specified player has loaded.
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.LOAD_PLAYER_COMMERCE_DATA">
+            <summary>
+            Requests the commerce data for the specified player, including the owned SKUs. Use `IS_PLAYER_COMMERCE_INFO_LOADED` to check if it has loaded.
+            </summary>
+        </member>
         <member name="F:CitizenFX.Core.Native.Hash.LOAD_RESOURCE_FILE">
             <summary>
             Reads the contents of a text file in a specified resource.
@@ -6549,11 +6569,34 @@
             Example: `local data = LoadResourceFile("devtools", "data.json")`
             </summary>
         </member>
+        <member name="F:CitizenFX.Core.Native.Hash.NETWORK_GET_ENTITY_OWNER">
+            <summary>
+            Returns the owner ID of the specified entity.
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.REGISTER_COMMAND">
+            <summary>
+            Registered commands can be executed by entering them in the client console (this works for client side and server side registered commands). Or by entering them in the server console/through an RCON client (only works for server side registered commands). Or if you use a supported chat resource, like the default one provided in the cfx-server-data repository, then you can enter the command in chat by prefixing it with a `/`.
+            
+            Commands registered using this function can also be executed by resources, using the [`ExecuteCommand` native](#_0x561C060B).
+            
+            The restricted bool is not used on the client side. Permissions can only be checked on the server side, so if you want to limit your command with an ace permission automatically, make it a server command (by registering it in a server script).
+            
+            **Example result**:
+            
+            ![](https://i.imgur.com/TaCnG09.png)
+            </summary>
+        </member>
         <member name="F:CitizenFX.Core.Native.Hash.REGISTER_RESOURCE_ASSET">
             <summary>
             **Experimental**: This native may be altered or removed in future versions of CitizenFX without warning.
             
             Registers a cached resource asset with the resource system, similar to the automatic scanning of the `stream/` folder.
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.REGISTER_RESOURCE_AS_EVENT_HANDLER">
+            <summary>
+            An internal function which allows the current resource's HLL script runtimes to receive state for the specified event.
             </summary>
         </member>
         <member name="F:CitizenFX.Core.Native.Hash.REGISTER_RESOURCE_BUILD_TASK_FACTORY">
@@ -6571,6 +6614,12 @@
             build = func(resourceName: string, cb: func(success: bool, status: string): void): void
             }
             ```
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.REQUEST_PLAYER_COMMERCE_SESSION">
+            <summary>
+            Requests the specified player to buy the passed SKU. This'll pop up a prompt on the client, which upon acceptance
+            will open the browser prompting further purchase details.
             </summary>
         </member>
         <member name="F:CitizenFX.Core.Native.Hash.SAVE_RESOURCE_FILE">
@@ -6643,6 +6692,13 @@
             Returns whether or not the currently executing event was canceled.
             </summary>
         </member>
+        <member name="M:CitizenFX.Core.Native.API.CanPlayerStartCommerceSession(System.String)">
+            <summary>
+            Returns whether or not the specified player has enough information to start a commerce session for.
+            </summary>
+            <param name="playerSrc">The player handle</param>
+            <returns>True or false.</returns>
+        </member>
         <member name="M:CitizenFX.Core.Native.API.CancelEvent">
             <summary>
             Cancels the currently executing event.
@@ -6652,6 +6708,14 @@
             <summary>
             thisScriptCheck - can be destroyed if it belongs to the calling script.
             </summary>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.DoesPlayerOwnSku(System.String,System.Int32)">
+            <summary>
+            Requests whether or not the player owns the specified SKU.
+            </summary>
+            <param name="playerSrc">The player handle</param>
+            <param name="skuId">The ID of the SKU.</param>
+            <returns>A boolean.</returns>
         </member>
         <member name="M:CitizenFX.Core.Native.API.FreezeEntityPosition(System.Int32,System.Boolean)">
             <summary>
@@ -6730,6 +6794,19 @@
             </summary>
             <returns>A boolean value.</returns>
         </member>
+        <member name="M:CitizenFX.Core.Native.API.IsPlayerCommerceInfoLoaded(System.String)">
+            <summary>
+            Requests whether or not the commerce data for the specified player has loaded.
+            </summary>
+            <param name="playerSrc">The player handle</param>
+            <returns>A boolean.</returns>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.LoadPlayerCommerceData(System.String)">
+            <summary>
+            Requests the commerce data for the specified player, including the owned SKUs. Use `IS_PLAYER_COMMERCE_INFO_LOADED` to check if it has loaded.
+            </summary>
+            <param name="playerSrc">The player handle</param>
+        </member>
         <member name="M:CitizenFX.Core.Native.API.LoadResourceFile(System.String,System.String)">
             <summary>
             Reads the contents of a text file in a specified resource.
@@ -6739,6 +6816,31 @@
             <param name="resourceName">The resource name.</param>
             <param name="fileName">The file in the resource.</param>
             <returns>The file contents</returns>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.NetworkGetEntityOwner(System.Int32)">
+            <summary>
+            Returns the owner ID of the specified entity.
+            </summary>
+            <param name="entity">The entity to get the owner for.</param>
+            <returns>On the server, the server ID of the entity owner. On the client, returns the player/slot ID of the entity owner.</returns>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.RegisterCommand(System.String,CitizenFX.Core.Native.InputArgument,System.Boolean)">
+            <summary>
+            Registered commands can be executed by entering them in the client console (this works for client side and server side registered commands). Or by entering them in the server console/through an RCON client (only works for server side registered commands). Or if you use a supported chat resource, like the default one provided in the cfx-server-data repository, then you can enter the command in chat by prefixing it with a `/`.
+            Commands registered using this function can also be executed by resources, using the [`ExecuteCommand` native](#_0x561C060B).
+            The restricted bool is not used on the client side. Permissions can only be checked on the server side, so if you want to limit your command with an ace permission automatically, make it a server command (by registering it in a server script).
+            **Example result**:
+            ![](https://i.imgur.com/TaCnG09.png)
+            </summary>
+            <param name="commandName">The command you want to register.</param>
+            <param name="handler">A handler function that gets called whenever the command is executed.</param>
+            <param name="restricted">If this is a server command and you set this to true, then players will need the command.yourCommandName ace permission to execute this command.</param>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.RegisterResourceAsEventHandler(System.String)">
+            <summary>
+            An internal function which allows the current resource's HLL script runtimes to receive state for the specified event.
+            </summary>
+            <param name="eventName">An event name, or "\*" to disable HLL event filtering for this resource.</param>
         </member>
         <member name="M:CitizenFX.Core.Native.API.RegisterResourceAsset(System.String,System.String)">
             <summary>
@@ -6765,6 +6867,14 @@
             </summary>
             <param name="factoryId">The identifier for the build task.</param>
             <param name="factoryFn">The factory function.</param>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.RequestPlayerCommerceSession(System.String,System.Int32)">
+            <summary>
+            Requests the specified player to buy the passed SKU. This'll pop up a prompt on the client, which upon acceptance
+            will open the browser prompting further purchase details.
+            </summary>
+            <param name="playerSrc">The player handle</param>
+            <param name="skuId">The ID of the SKU.</param>
         </member>
         <member name="M:CitizenFX.Core.Native.API.SaveResourceFile(System.String,System.String,System.String,System.Int32)">
             <summary>
@@ -6841,6 +6951,107 @@
             Returns whether or not the currently executing event was canceled.
             </summary>
             <returns>A boolean.</returns>
+        </member>
+        <member name="P:CitizenFX.Core.Entity.Position">
+            <summary>
+            Gets or sets the position of this <see cref="T:CitizenFX.Core.Entity"/>.
+            </summary>
+            <value>
+            The position in world space.
+            </value>
+        </member>
+        <member name="P:CitizenFX.Core.Entity.Rotation">
+            <summary>
+            Gets or sets the rotation of this <see cref="T:CitizenFX.Core.Entity"/>.
+            </summary>
+            <value>
+            The yaw, pitch, roll rotation values.
+            </value>
+        </member>
+        <member name="P:CitizenFX.Core.Entity.Heading">
+            <summary>
+            Gets or sets the heading of this <see cref="T:CitizenFX.Core.Entity"/>.
+            </summary>
+            <value>
+            The heading in degrees.
+            </value>
+        </member>
+        <member name="P:CitizenFX.Core.Entity.IsPositionFrozen">
+            <summary>
+            Sets a value indicating whether this <see cref="T:CitizenFX.Core.Entity"/> should be frozen.
+            </summary>
+            <value>
+            <c>true</c> if this <see cref="T:CitizenFX.Core.Entity"/> position should be frozen; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:CitizenFX.Core.Entity.Velocity">
+            <summary>
+            Gets or sets the velocity of this <see cref="T:CitizenFX.Core.Entity"/>.
+            </summary>
+        </member>
+        <member name="P:CitizenFX.Core.Entity.RotationVelocity">
+            <summary>
+            Gets the rotation velocity of this <see cref="T:CitizenFX.Core.Entity"/>.
+            </summary>
+        </member>
+        <member name="P:CitizenFX.Core.Entity.Model">
+            <summary>
+            Gets the model of the this <see cref="T:CitizenFX.Core.Entity"/>.
+            </summary>
+        </member>
+        <member name="P:CitizenFX.Core.Entity.Owner">
+            <summary>
+            Gets the network owner of the this <see cref="T:CitizenFX.Core.Entity"/>.
+            </summary>
+            <returns>Returns the <see cref="T:CitizenFX.Core.Player"/> of the network owner.</returns>
+        </member>
+        <member name="P:CitizenFX.Core.Entity.NetworkId">
+            <summary>
+            Gets the network ID of the this <see cref="T:CitizenFX.Core.Entity"/>.
+            </summary>
+        </member>
+        <member name="P:CitizenFX.Core.Entity.Type">
+            <summary>
+            Gets the type of this <see cref="T:CitizenFX.Core.Entity"/>.
+            </summary>
+            <returns>Returns 1 if this <see cref="T:CitizenFX.Core.Entity"/> is a Ped.
+            Returns 2 if this <see cref="T:CitizenFX.Core.Entity"/> is a Vehicle.
+            Returns 3 if this <see cref="T:CitizenFX.Core.Entity"/> is a Prop.</returns>
+        </member>
+        <member name="M:CitizenFX.Core.Entity.FromHandle(System.Int32)">
+            <summary>
+            Creates a new instance of an <see cref="T:CitizenFX.Core.Entity"/> from the given handle.
+            </summary>
+            <param name="handle">The entity handle.</param>
+            <returns>Returns a <see cref="T:CitizenFX.Core.Ped"/> if this handle corresponds to a Ped.
+            Returns a <see cref="T:CitizenFX.Core.Vehicle"/> if this handle corresponds to a Vehicle.
+            Returns a <see cref="T:CitizenFX.Core.Prop"/> if this handle corresponds to a Prop.
+            Returns <c>null</c> if no <see cref="T:CitizenFX.Core.Entity"/> exists this the specified <paramref name="handle"/></returns>
+        </member>
+        <member name="M:CitizenFX.Core.Entity.FromNetworkId(System.Int32)">
+            <summary>
+            Creates a new instance of an <see cref="T:CitizenFX.Core.Entity"/> from the given network ID.
+            </summary>
+            <param name="networkId">The entity network ID.</param>
+            <returns>Returns a <see cref="T:CitizenFX.Core.Ped"/> if this network ID corresponds to a Ped.
+            Returns a <see cref="T:CitizenFX.Core.Vehicle"/> if this network ID corresponds to a Vehicle.
+            Returns a <see cref="T:CitizenFX.Core.Prop"/> if this network ID corresponds to a Prop.
+            Returns <c>null</c> if no <see cref="T:CitizenFX.Core.Entity"/> exists this the specified <paramref name="networkId"/></returns>
+        </member>
+        <member name="M:CitizenFX.Core.Entity.Equals(CitizenFX.Core.Entity)">
+            <summary>
+            Checks if two <see cref="T:CitizenFX.Core.Entity"/>s refer to the same <see cref="T:CitizenFX.Core.Entity"/>
+            </summary>
+            <param name="entity">The other <see cref="T:CitizenFX.Core.Entity"/>.</param>
+            <returns><c>true</c> if they are the same <see cref="T:CitizenFX.Core.Entity"/>; otherwise, false</returns>
+        </member>
+        <member name="M:CitizenFX.Core.Ped.FromPlayerHandle(System.String)">
+            <summary>
+            Creates a new instance of an <see cref="T:CitizenFX.Core.Ped"/> from the given player handle.
+            </summary>
+            <param name="handle">The players handle.</param>
+            <returns>Returns the <see cref="T:CitizenFX.Core.Ped"/> of the player.
+            Returns <c>null</c> if no <see cref="T:CitizenFX.Core.Ped"/> exists for the specified player</returns>
         </member>
         <member name="M:CitizenFX.Core.Player.Equals(System.Object)">
             <inheritdoc />
