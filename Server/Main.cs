@@ -1,16 +1,13 @@
-﻿using System;
-using CitizenFX.Core;
+﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
 
 namespace Server
 {
     public class Main : BaseScript
     {
-        public Main()
-        {
-            EventHandlers.Add("NoReticle:Server:GetPlayerReticleAceAllowed", new Action<Player>(GetPlayerReticleAceAllowed));
-        }
+        public Main() { }
 
+        [EventHandler("NoReticle:Server:GetPlayerReticleAceAllowed")]
         private void GetPlayerReticleAceAllowed([FromSource] Player p)
         {
             // if ace permission 'Reticle' is allowed for the player then show the reticle..

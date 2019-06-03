@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
@@ -8,55 +10,46 @@ namespace Client
 {
     public class Main : BaseScript
     {
-        private Ped _p = Game.PlayerPed;
         private bool _reticleAllowed = false;
+
+        private List<WeaponHash> _overrideDisable = new List<WeaponHash>()
+        {
+            WeaponHash.Unarmed, WeaponHash.StunGun, WeaponHash.SniperRifle, WeaponHash.HeavySniper,
+            WeaponHash.HeavySniperMk2, WeaponHash.MarksmanRifle,
+        };
 
         public Main()
         {
             Log("Resource loaded.");
-            
-            EventHandlers.Add("NoReticle:Client:SetPlayerReticleAceAllowed", new Action(SetPlayerReticleAceAllowed));
-
             TriggerServerEvent("NoReticle:Server:GetPlayerReticleAceAllowed", Game.Player.Handle);
-
-            Tick += ProcessTask;
         }
 
+        [EventHandler("NoReticle:Client:SetPlayerReticleAceAllowed")]
         private void SetPlayerReticleAceAllowed()
         {
             Screen.ShowNotification("Allowing reticle.", true);
             _reticleAllowed = true;
         }
 
+        [Tick]
         private async Task ProcessTask()
         {
-            if (_p != null)
+            // gets client's current weapon.
+            Weapon w = Game.PlayerPed?.Weapons?.Current;
+
+            if (w != null)
             {
-                // gets client's current weapon.
-                Weapon w = _p.Weapons.Current;
+                WeaponHash wHash = w.Hash;
 
-                if (w != null)
+                if (!_overrideDisable.Contains(wHash) && API.GetHashKey(wHash.ToString()) != -1783943904) // add MarksmanRifle MKII
                 {
-                    WeaponHash wHash = w.Hash;
-
-                    if (wHash != WeaponHash.Unarmed && wHash != WeaponHash.StunGun &&
-                        wHash != WeaponHash.SniperRifle && wHash != WeaponHash.HeavySniper &&
-                        wHash != WeaponHash.HeavySniperMk2 &&
-                        wHash != WeaponHash.MarksmanRifle &&
-                        API.GetHashKey(wHash.ToString()) != -1783943904) // add MarksmanRifle MKII
+                    // if ace perm "Reticle" is not allowed (cannot have reticle) then..
+                    if (!_reticleAllowed)
                     {
-                        // if ace perm "Reticle" is not allowed (cannot have reticle) then..
-                        if (_reticleAllowed == false)
-                        {
-                            // hides reticle (white dot [HUD] when aiming in).
-                            API.HideHudComponentThisFrame(14);
-                        }
+                        // hides reticle (white dot [HUD] when aiming in).
+                        API.HideHudComponentThisFrame(14);
                     }
                 }
-            }
-            else
-            {
-                _p = Game.PlayerPed;
             }
         }
 
