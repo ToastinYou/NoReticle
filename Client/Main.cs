@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CitizenFX.Core;
+﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using CitizenFX.Core.UI;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Client
 {
     public class Main : BaseScript
     {
-        private bool _reticleAllowed = false;
+        private bool _reticleAllowed;
 
         private List<WeaponHash> _overrideDisable = new List<WeaponHash>()
         {
             WeaponHash.Unarmed, WeaponHash.StunGun, WeaponHash.SniperRifle, WeaponHash.HeavySniper,
-            WeaponHash.HeavySniperMk2, WeaponHash.MarksmanRifle,
+            WeaponHash.HeavySniperMk2, WeaponHash.MarksmanRifle, WeaponHash.MarksmanRifleMk2,
         };
 
         public Main()
@@ -27,7 +26,7 @@ namespace Client
         [EventHandler("NoReticle:Client:SetPlayerReticleAceAllowed")]
         private void SetPlayerReticleAceAllowed()
         {
-            Screen.ShowNotification("Allowing reticle.", true);
+            Log("Allowing reticle.");
             _reticleAllowed = true;
         }
 
@@ -41,7 +40,7 @@ namespace Client
             {
                 WeaponHash wHash = w.Hash;
 
-                if (!_overrideDisable.Contains(wHash) && API.GetHashKey(wHash.ToString()) != -1783943904) // add MarksmanRifle MKII
+                if (!_overrideDisable.Contains(wHash))
                 {
                     // if ace perm "Reticle" is not allowed (cannot have reticle) then..
                     if (!_reticleAllowed)
@@ -59,7 +58,7 @@ namespace Client
         /// <param name="msg">Message to display.</param>
         private void Log(string msg)
         {
-            Debug.Write($"[NoReticle] - {msg}");
+            Debug.Write($"[NoReticle]: {msg}");
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Server
         private void GetPlayerReticleAceAllowed([FromSource] Player p)
         {
             // if ace permission 'Reticle' is allowed for the player then show the reticle..
-            if (API.IsPlayerAceAllowed(p.Handle, "Reticle") == true)
+            if (API.IsPlayerAceAllowed(p.Handle, "Reticle"))
             {
                 p.TriggerEvent("NoReticle:Client:SetPlayerReticleAceAllowed");
             }
