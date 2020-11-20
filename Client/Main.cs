@@ -49,7 +49,7 @@ namespace Client
         /// <param name="msg">Message to display.</param>
         private void Log(string msg)
         {
-            Debug.Write($"[NoReticle]: {msg}");
+            Debug.Write($"[NoReticle]: {msg}\n");
         }
     }
 }
