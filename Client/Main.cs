@@ -1,8 +1,6 @@
 ﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
-using CitizenFX.Core.UI;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Client
@@ -10,12 +8,6 @@ namespace Client
     public class Main : BaseScript
     {
         private bool _reticleAllowed;
-
-        private List<WeaponHash> _overrideDisable = new List<WeaponHash>()
-        {
-            WeaponHash.Unarmed, WeaponHash.StunGun, WeaponHash.SniperRifle, WeaponHash.HeavySniper,
-            WeaponHash.HeavySniperMk2, WeaponHash.MarksmanRifle, WeaponHash.MarksmanRifleMk2,
-        };
 
         public Main()
         {
@@ -38,9 +30,8 @@ namespace Client
 
             if (w != null)
             {
-                WeaponHash wHash = w.Hash;
-
-                if (!_overrideDisable.Contains(wHash))
+                // disable reticle for musket and all weapons EXCEPT snipers, unarmed, stungun, and aircraft (w.Group == 0).
+                if (w.Hash == WeaponHash.Musket || !(w.Group == WeaponGroup.Sniper || w.Group == WeaponGroup.Unarmed || w.Group == WeaponGroup.Stungun || w.Group == 0))
                 {
                     // if ace perm "Reticle" is not allowed (cannot have reticle) then..
                     if (!_reticleAllowed)
