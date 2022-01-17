@@ -1,22 +1,20 @@
 ﻿using CitizenFX.Core;
-using CitizenFX.Core.Native;
+using static CitizenFX.Core.Native.API;
 
-namespace Server
+namespace NoReticle.Server
 {
-    public class Main : BaseScript
+    public class ServerMain : BaseScript
     {
-        public Main() { }
-
         [EventHandler("NoReticle:Server:GetAcePermissions")]
         private void GetAcePermissions([FromSource] Player p)
         {
             // if ace permission 'Reticle' is allowed for the player then show the reticle..
-            if (API.IsPlayerAceAllowed(p.Handle, "Reticle"))
+            if (IsPlayerAceAllowed(p.Handle, "Reticle"))
             {
                 p.TriggerEvent("NoReticle:Client:SetPlayerReticleAceAllowed");
             }
             // if ace permission 'ReticleStunGun' is allowed for the player then show the reticle..
-            if (API.IsPlayerAceAllowed(p.Handle, "ReticleStunGun"))
+            if (IsPlayerAceAllowed(p.Handle, "ReticleStunGun"))
             {
                 p.TriggerEvent("NoReticle:Client:SetStunGunReticleAllowed");
             }
