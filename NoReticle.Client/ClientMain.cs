@@ -1,15 +1,15 @@
 ﻿using CitizenFX.Core;
-using CitizenFX.Core.Native;
-using System;
+using static CitizenFX.Core.Native.API;
 using System.Threading.Tasks;
+using CitizenFX.Core.UI;
 
-namespace Client
+namespace NoReticle.Client
 {
-    public class Main : BaseScript
+    public class ClientMain : BaseScript
     {
-        private bool _reticleAllowed, _stunGunReticleAllowed;
+        private bool reticleAllowed, stunGunReticleAllowed;
 
-        public Main()
+        public ClientMain()
         {
             Log("Resource loaded.");
             TriggerServerEvent("NoReticle:Server:GetAcePermissions", Game.Player.Handle);
@@ -19,18 +19,18 @@ namespace Client
         private void SetPlayerReticleAceAllowed()
         {
             Log("Allowing reticle.");
-            _reticleAllowed = true;
+            reticleAllowed = true;
         }
 
         [EventHandler("NoReticle:Client:SetStunGunReticleAllowed")]
         private void SetStunGunReticleAllowed()
         {
             Log("Allowing stun gun reticle.");
-            _stunGunReticleAllowed = true;
+            stunGunReticleAllowed = true;
         }
 
         [Tick]
-        private async Task ProcessTask()
+        private Task OnTick()
         {
             // gets client's current weapon.
             Weapon w = Game.PlayerPed?.Weapons?.Current;
@@ -38,20 +38,22 @@ namespace Client
             if (w != null)
             {
                 // disable reticle for musket and all weapons EXCEPT snipers, unarmed, stungun (if permissions allowed), and aircraft (w.Group == 0).
-                if (w.Hash == WeaponHash.Musket || !(w.Group == WeaponGroup.Sniper || w.Group == WeaponGroup.Unarmed || (_stunGunReticleAllowed && w.Group == WeaponGroup.Stungun) || w.Group == 0))
+                if (w.Hash == WeaponHash.Musket || !((w.Group == WeaponGroup.Sniper && IsFirstPersonAimCamActive()) || w.Group == WeaponGroup.Unarmed || (stunGunReticleAllowed && w.Group == WeaponGroup.Stungun) || w.Group == 0))
                 {
                     // if ace perm "Reticle" is not allowed (cannot have reticle) then..
-                    if (!_reticleAllowed)
+                    if (!reticleAllowed)
                     {
                         // hides reticle (white dot [HUD] when aiming in).
-                        API.HideHudComponentThisFrame(14);
+                        HideHudComponentThisFrame(14);
                     }
                 }
             }
+
+            return Task.FromResult(0);
         }
 
         /// <summary>
-        /// Writes debug message to client's console.
+        /// Writes debug message to the client's console.
         /// </summary>
         /// <param name="msg">Message to display.</param>
         private void Log(string msg)
