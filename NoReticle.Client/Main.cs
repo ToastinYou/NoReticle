@@ -6,7 +6,7 @@ namespace NoReticle.Client
 {
     public class Main : BaseScript
     {
-        private bool reticleAllowed, stunGunReticleAllowed;
+        private bool _reticleAllowed, _stunGunReticleAllowed;
 
         public Main()
         {
@@ -18,14 +18,14 @@ namespace NoReticle.Client
         private void SetPlayerReticleAceAllowed()
         {
             Log("Allowing reticle.");
-            reticleAllowed = true;
+            _reticleAllowed = true;
         }
 
         [EventHandler("NoReticle:Client:SetStunGunReticleAllowed")]
         private void SetStunGunReticleAllowed()
         {
             Log("Allowing stun gun reticle.");
-            stunGunReticleAllowed = true;
+            _stunGunReticleAllowed = true;
         }
 
         [Tick]
@@ -37,10 +37,10 @@ namespace NoReticle.Client
             if (w != null)
             {
                 // disable reticle for musket and all weapons EXCEPT snipers, unarmed, stungun (if permissions allowed), and aircraft (w.Group == 0).
-                if (w.Hash == WeaponHash.Musket || !((w.Group == WeaponGroup.Sniper && IsFirstPersonAimCamActive()) || w.Group == WeaponGroup.Unarmed || (stunGunReticleAllowed && w.Group == WeaponGroup.Stungun) || w.Group == 0))
+                if (w.Hash == WeaponHash.Musket || !((w.Group == WeaponGroup.Sniper && IsFirstPersonAimCamActive()) || w.Group == WeaponGroup.Unarmed || (_stunGunReticleAllowed && w.Group == WeaponGroup.Stungun) || w.Group == 0))
                 {
                     // if ace perm "Reticle" is not allowed (cannot have reticle) then..
-                    if (!reticleAllowed)
+                    if (!_reticleAllowed)
                     {
                         // hides reticle (white dot [HUD] when aiming in).
                         HideHudComponentThisFrame(14);
@@ -55,9 +55,9 @@ namespace NoReticle.Client
         /// Writes debug message to the client's console.
         /// </summary>
         /// <param name="msg">Message to display.</param>
-        private void Log(string msg)
+        private static void Log(string msg)
         {
-            Debug.Write($"[NoReticle]: {msg}\n");
+            Debug.WriteLine($"[NoReticle]: {msg}");
         }
     }
 }
