@@ -3,7 +3,7 @@ using static CitizenFX.Core.Native.API;
 
 namespace NoReticle.Server
 {
-    public class ServerMain : BaseScript
+    public class Main : BaseScript
     {
         [EventHandler("NoReticle:Server:GetAcePermissions")]
         private void GetAcePermissions([FromSource] Player p)

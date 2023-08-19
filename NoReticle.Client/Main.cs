@@ -5,11 +5,11 @@ using CitizenFX.Core.UI;
 
 namespace NoReticle.Client
 {
-    public class ClientMain : BaseScript
+    public class Main : BaseScript
     {
         private bool reticleAllowed, stunGunReticleAllowed;
 
-        public ClientMain()
+        public Main()
         {
             Log("Resource loaded.");
             TriggerServerEvent("NoReticle:Server:GetAcePermissions", Game.Player.Handle);
