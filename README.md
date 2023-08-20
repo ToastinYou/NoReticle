@@ -23,3 +23,6 @@ noreticle_enable_give_all_weapons_command false
 # Hide aircraft's reticle/HUD:
 noreticle_hide_aircraft_reticle false
 ```
+
+# Recognition
+Thank you [Tom Grobbe](https://github.com/TomGrobbe) for [MenuAPI](https://github.com/TomGrobbe/MenuAPI).
