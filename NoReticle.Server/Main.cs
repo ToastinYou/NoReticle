@@ -34,6 +34,7 @@ namespace NoReticle.Server
                     if (ex is ArgumentNullException || ex is InvalidOperationException)
                     {
                         Log($"Failed to find player {source} for command /weapons.");
+                        return;
                     }
 
                     // Unanticipated exception.
