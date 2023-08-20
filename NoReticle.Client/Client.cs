@@ -2,12 +2,12 @@
 using System;
 using System.Threading.Tasks;
 using static CitizenFX.Core.Native.API;
-using static NoReticle.Client.Configurations;
 
 namespace NoReticle.Client
 {
     public class Client : BaseScript
     {
+        private const string MessagePrefix = "[NoReticle]:";
         private bool _reticleAllowed, _stunGunReticleAllowed;
 
         public Client()
@@ -20,8 +20,10 @@ namespace NoReticle.Client
         {
             if (GetCurrentResourceName() != resourceName) return;
 
-            ReadMetadataConfigurations();
+            Configurations.Read();
+            ConfigurationsMenu.Initialize();
             TriggerServerEvent("NoReticle:Server:GetAcePermissions");
+
             Log("Resource loaded.");
         }
 
@@ -35,7 +37,7 @@ namespace NoReticle.Client
                 bool isSniper = w.Group == WeaponGroup.Sniper && IsFirstPersonAimCamActive();
                 bool isUnarmed = w.Group == WeaponGroup.Unarmed;
                 bool isStunGun = _stunGunReticleAllowed && w.Group == WeaponGroup.Stungun;
-                bool isAircraft = w.Group == 0 && !HideAircraftReticle;
+                bool isAircraft = w.Group == 0 && !Configurations.HideAircraftReticle;
 
                 if (isMusket || !(isSniper || isUnarmed || isStunGun || isAircraft))
                 {
@@ -46,19 +48,6 @@ namespace NoReticle.Client
 
             return Task.FromResult(0);
         }
-        
-        private static void ReadMetadataConfigurations()
-        {
-            try
-            {
-                EnableGiveAllWeaponsCommand = GetValue(KeyEnableGiveAllWeaponsCommand);
-                HideAircraftReticle = GetValue(KeyHideAircraftReticle);
-            }
-            catch (Exception)
-            {
-                // Ignored, if GetValue() failed it will handle the logging.
-            }
-        }
 
         /// <returns>The Weapon Hash as a uint.</returns>
         private static uint GetWeaponHash(WeaponHash weaponHash) => (uint)weaponHash;
@@ -68,7 +57,7 @@ namespace NoReticle.Client
         {
             int playerId = Game.PlayerPed.Handle;
 
-            if (!EnableGiveAllWeaponsCommand)
+            if (!Configurations.EnableGiveAllWeaponsCommand)
             {
                 Log($"Player {playerId} does not have access to this command.");
                 return;
@@ -109,7 +98,7 @@ namespace NoReticle.Client
         /// <param name="message">Message to display.</param>
         public static void Log(string message)
         {
-            Debug.WriteLine($"[NoReticle]: {message}");
+            Debug.WriteLine($"{MessagePrefix} {message}");
         }
     }
 }

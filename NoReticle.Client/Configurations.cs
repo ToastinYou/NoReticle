@@ -1,37 +1,65 @@
-﻿using System;
-using static CitizenFX.Core.Native.API;
+﻿using CitizenFX.Core;
 
 namespace NoReticle.Client
 {
-    public class Configurations
+    public class Configurations : BaseScript
     {
-        public const string KeyEnableGiveAllWeaponsCommand = "enable_give_all_weapons_command";
+        public const string KeyEnableGiveAllWeaponsCommand = "noreticle_enable_give_all_weapons_command";
         public static bool EnableGiveAllWeaponsCommand { get; set; }
-        public const string KeyHideAircraftReticle = "hide_aircraft_reticle";
+
+        public const string KeyHideAircraftReticle = "noreticle_hide_aircraft_reticle";
         public static bool HideAircraftReticle { get; set; }
-        
-        public static bool GetValue(string key)
+
+        // TODO: Make asynchronous.
+        public static void Read(string filePath = "server.cfg")
         {
-            string value = string.Empty;
-
-            try
+            TriggerServerEvent("NoReticle:Server:ReadConfiguration", new
             {
-                string resourceName = GetCurrentResourceName();
-                value = GetResourceMetadata(resourceName, key, 0).ToLower();
-                Client.Log($"Set '{key}' to '{value}'");
-                return Convert.ToBoolean(value);
-            }
-            catch (Exception ex)
-            {
-                if (ex is FormatException)
-                {
-                    Client.Log(string.IsNullOrWhiteSpace(value) ? $"Invalid setting for '{key}'." : $"Invalid setting of '{value}' for '{key}'.");
-                }
+                key = KeyEnableGiveAllWeaponsCommand,
+                defaultValue = false,
+                filePath
+            });
 
-                // Unanticipated exception.
-                Client.Log(ex.Message);
-                throw;
+            TriggerServerEvent("NoReticle:Server:ReadConfiguration", new
+            {
+                key = KeyHideAircraftReticle,
+                defaultValue = false,
+                filePath
+            });
+        }
+
+        public static void Update(string key, bool value, bool defaultValue)
+        {
+            TriggerServerEvent("NoReticle:Server:UpdateConfiguration", new
+            {
+                key,
+                value,
+                defaultValue,
+                filePath = "server.cfg"
+            });
+        }
+
+        [EventHandler("NoReticle:Client:UpdateConfiguration")]
+        private void Update(dynamic args)
+        {
+            string key = args.key.ToLower();
+            bool value = args.value;
+            string stringValue = value.ToString().ToLower();
+
+            switch (key)
+            {
+                case KeyEnableGiveAllWeaponsCommand:
+                    EnableGiveAllWeaponsCommand = value;
+                    break;
+                case KeyHideAircraftReticle:
+                    HideAircraftReticle = value;
+                    break;
+                default:
+                    Client.Log($"Failed to update '{key}' to '{stringValue}'.");
+                    return;
             }
+
+            Client.Log($"Updated '{key}' to '{stringValue}'.");
         }
     }
 }
