@@ -87,6 +87,7 @@ namespace NoReticle.Server
             }
             catch (Exception ex)
             {
+                // Most likely could not find the specified file at filePath. Return defaultValue.
                 Log("An error occurred: " + ex.Message);
                 return await Task.FromResult(defaultValue);
             }
