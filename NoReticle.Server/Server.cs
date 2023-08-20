@@ -6,9 +6,9 @@ using static CitizenFX.Core.Native.API;
 
 namespace NoReticle.Server
 {
-    public class Main : BaseScript
+    public class Server : BaseScript
     {
-        public Main()
+        public Server()
         {
             RegisterWeaponsCommand();
         }
@@ -62,7 +62,7 @@ namespace NoReticle.Server
         /// Writes debug message to the server's console.
         /// </summary>
         /// <param name="message">Message to display.</param>
-        private static void Log(string message)
+        public static void Log(string message)
         {
             Debug.WriteLine($"[NoReticle]: {message}");
         }

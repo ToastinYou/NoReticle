@@ -5,11 +5,11 @@ using static CitizenFX.Core.Native.API;
 
 namespace NoReticle.Client
 {
-    public class Main : BaseScript
+    public class Client : BaseScript
     {
-        private bool _reticleAllowed, _stunGunReticleAllowed, _giveAllWeaponsCommandEnabled;
+        private bool _reticleAllowed, _stunGunReticleAllowed;
 
-        public Main()
+        public Client()
         {
             EventHandlers.Add("onClientResourceStart", new Action<string>(OnClientResourceStart));
             Tick += OnTick;
@@ -19,7 +19,7 @@ namespace NoReticle.Client
         {
             if (GetCurrentResourceName() != resourceName) return;
 
-            ReadMetadataConfigurations(resourceName);
+            ReadMetadataConfigurations();
             TriggerServerEvent("NoReticle:Server:GetAcePermissions");
             Log("Resource loaded.");
         }
@@ -34,7 +34,7 @@ namespace NoReticle.Client
                 bool isSniper = w.Group == WeaponGroup.Sniper && IsFirstPersonAimCamActive();
                 bool isUnarmed = w.Group == WeaponGroup.Unarmed;
                 bool isStunGun = _stunGunReticleAllowed && w.Group == WeaponGroup.Stungun;
-                bool isAircraft = w.Group == 0;
+                bool isAircraft = w.Group == 0 && !Configurations.HideAircraftReticle;
 
                 if (isMusket || !(isSniper || isUnarmed || isStunGun || isAircraft))
                 {
@@ -45,25 +45,20 @@ namespace NoReticle.Client
 
             return Task.FromResult(0);
         }
-
-        private void ReadMetadataConfigurations(string resourceName)
+        
+        private static void ReadMetadataConfigurations()
         {
-            string giveAllWeaponsCommandMetadata = GetResourceMetadata(resourceName, "enable_give_all_weapons_command", 0).ToLower();
+            const string keyEnableGiveAllWeaponsCommand = "enable_give_all_weapons_command";
+            const string keyHideAircraftReticle = "hide_aircraft_reticle";
 
             try
             {
-                _giveAllWeaponsCommandEnabled = Convert.ToBoolean(giveAllWeaponsCommandMetadata);
-                Log($"Set 'enable_give_all_weapons_command' to '{giveAllWeaponsCommandMetadata}'");
+                Configurations.EnableGiveAllWeaponsCommand = Configurations.GetValue(keyEnableGiveAllWeaponsCommand);
+                Configurations.HideAircraftReticle = Configurations.GetValue(keyHideAircraftReticle);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                if (ex is FormatException)
-                {
-                    Log($"Invalid setting of '{giveAllWeaponsCommandMetadata}' for 'enable_give_all_weapons_command'.");
-                }
-
-                // Unanticipated exception.
-                Log(ex.Message);
+                // Ignored, if Configurations.GetValue() failed it will handle the logging.
             }
         }
 
@@ -75,7 +70,7 @@ namespace NoReticle.Client
         {
             int playerId = Game.PlayerPed.Handle;
 
-            if (!_giveAllWeaponsCommandEnabled)
+            if (!Configurations.EnableGiveAllWeaponsCommand)
             {
                 Log($"Player {playerId} does not have access to this command.");
                 return;
@@ -114,7 +109,7 @@ namespace NoReticle.Client
         /// Writes debug message to the client's console.
         /// </summary>
         /// <param name="message">Message to display.</param>
-        private static void Log(string message)
+        public static void Log(string message)
         {
             Debug.WriteLine($"[NoReticle]: {message}");
         }
