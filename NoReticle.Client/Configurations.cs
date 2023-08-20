@@ -5,9 +5,11 @@ namespace NoReticle.Client
 {
     public class Configurations
     {
+        public const string KeyEnableGiveAllWeaponsCommand = "enable_give_all_weapons_command";
         public static bool EnableGiveAllWeaponsCommand { get; set; }
+        public const string KeyHideAircraftReticle = "hide_aircraft_reticle";
         public static bool HideAircraftReticle { get; set; }
-
+        
         public static bool GetValue(string key)
         {
             string value = string.Empty;

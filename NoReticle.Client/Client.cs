@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using static CitizenFX.Core.Native.API;
+using static NoReticle.Client.Configurations;
 
 namespace NoReticle.Client
 {
@@ -34,7 +35,7 @@ namespace NoReticle.Client
                 bool isSniper = w.Group == WeaponGroup.Sniper && IsFirstPersonAimCamActive();
                 bool isUnarmed = w.Group == WeaponGroup.Unarmed;
                 bool isStunGun = _stunGunReticleAllowed && w.Group == WeaponGroup.Stungun;
-                bool isAircraft = w.Group == 0 && !Configurations.HideAircraftReticle;
+                bool isAircraft = w.Group == 0 && !HideAircraftReticle;
 
                 if (isMusket || !(isSniper || isUnarmed || isStunGun || isAircraft))
                 {
@@ -48,17 +49,14 @@ namespace NoReticle.Client
         
         private static void ReadMetadataConfigurations()
         {
-            const string keyEnableGiveAllWeaponsCommand = "enable_give_all_weapons_command";
-            const string keyHideAircraftReticle = "hide_aircraft_reticle";
-
             try
             {
-                Configurations.EnableGiveAllWeaponsCommand = Configurations.GetValue(keyEnableGiveAllWeaponsCommand);
-                Configurations.HideAircraftReticle = Configurations.GetValue(keyHideAircraftReticle);
+                EnableGiveAllWeaponsCommand = GetValue(KeyEnableGiveAllWeaponsCommand);
+                HideAircraftReticle = GetValue(KeyHideAircraftReticle);
             }
             catch (Exception)
             {
-                // Ignored, if Configurations.GetValue() failed it will handle the logging.
+                // Ignored, if GetValue() failed it will handle the logging.
             }
         }
 
@@ -70,7 +68,7 @@ namespace NoReticle.Client
         {
             int playerId = Game.PlayerPed.Handle;
 
-            if (!Configurations.EnableGiveAllWeaponsCommand)
+            if (!EnableGiveAllWeaponsCommand)
             {
                 Log($"Player {playerId} does not have access to this command.");
                 return;
