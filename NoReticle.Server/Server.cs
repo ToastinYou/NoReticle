@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using CitizenFX.Core.Native;
 using static CitizenFX.Core.Native.API;
 
 namespace NoReticle.Server
@@ -19,32 +20,34 @@ namespace NoReticle.Server
 
         private void RegisterWeaponsCommand()
         {
-            RegisterCommand("weapons", new Action<int, List<object>, string>((source, args, rawCommand) =>
+            RegisterCommand("weapons", new Action<int, List<object>, string>(WeaponsCommandHandler), false);
+        }
+
+        private void WeaponsCommandHandler(int source, List<object> args, string rawCommand)
+        {
+            // Source is not a player.
+            if (source <= 0)
             {
-                // Source is not a player.
-                if (source <= 0)
+                Log($"Command /{rawCommand} must be executed by a player.");
+                return;
+            }
+
+            try
+            {
+                Player player = Players.Single(p => p.Handle == source.ToString());
+                player.TriggerEvent("NoReticle:Client:GiveAllWeapons");
+            }
+            catch (Exception ex)
+            {
+                if (ex is ArgumentNullException or InvalidOperationException)
                 {
-                    Log($"Command /{rawCommand} must be executed by a player.");
+                    Log($"Failed to find player {source} for command /weapons.");
                     return;
                 }
 
-                try
-                {
-                    Player player = Players.Single(p => p.Handle == source.ToString());
-                    player.TriggerEvent("NoReticle:Client:GiveAllWeapons");
-                }
-                catch (Exception ex)
-                {
-                    if (ex is ArgumentNullException or InvalidOperationException)
-                    {
-                        Log($"Failed to find player {source} for command /weapons.");
-                        return;
-                    }
-
-                    // Unanticipated exception.
-                    Log(ex.Message);
-                }
-            }), false);
+                // Unanticipated exception.
+                Log(ex.Message);
+            }
         }
 
         private async Task<bool> Configuration(string key, bool defaultValue, string filePath, bool? updatedValue = null)
