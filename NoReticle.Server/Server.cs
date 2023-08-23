@@ -20,7 +20,7 @@ namespace NoReticle.Server
 
         private void RegisterWeaponsCommand()
         {
-            RegisterCommand("weapons", new Action<int, List<object>, string>(WeaponsCommandHandler), false);
+            RegisterCommand("weapons", new Action<int, List<object>, string>(WeaponsCommandHandler), true);
         }
 
         private void WeaponsCommandHandler(int source, List<object> args, string rawCommand)
