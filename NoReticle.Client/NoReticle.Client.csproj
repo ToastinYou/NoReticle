@@ -59,6 +59,7 @@
     <Compile Include="Configurations.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="ConfigurationsMenu.cs" />
+    <Compile Include="ClientLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

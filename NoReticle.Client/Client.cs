@@ -2,12 +2,15 @@
 using System;
 using System.Threading.Tasks;
 using static CitizenFX.Core.Native.API;
+using static NoReticle.Client.ClientLog;
 
 namespace NoReticle.Client
 {
     public class Client : BaseScript
     {
-        private const string MessagePrefix = "[NoReticle]:";
+        /// <returns>The current player's handle (ID), or -1 if the ID cannot be found.</returns>
+        public static int Handle => Game.PlayerPed?.Handle ?? -1;
+
         private bool _reticleAllowed, _stunGunReticleAllowed;
 
         public Client()
@@ -24,7 +27,7 @@ namespace NoReticle.Client
             ConfigurationsMenu.Initialize();
             TriggerServerEvent("NoReticle:Server:GetAcePermissions");
 
-            Log("Resource loaded.");
+            Trace("Resource loaded.");
         }
 
         private Task OnTick()
@@ -49,17 +52,24 @@ namespace NoReticle.Client
             return Task.FromResult(0);
         }
 
+        [EventHandler("NoReticle:Client:OpenMenu")]
+        private void OpenMenu()
+        {
+            Trace($"Received NoReticle:Client:OpenMenu.");
+            ConfigurationsMenu.OpenMenu();
+        }
+
         /// <returns>The Weapon Hash as a uint.</returns>
         private static uint GetWeaponHash(WeaponHash weaponHash) => (uint)weaponHash;
 
         [EventHandler("NoReticle:Client:GiveAllWeapons")]
         private void GiveAllWeapons()
         {
-            int playerId = Game.PlayerPed.Handle;
+            Trace($"Received NoReticle:Client:GiveAllWeapons.");
 
             if (!Configurations.EnableGiveAllWeaponsCommand)
             {
-                Log($"Player {playerId} does not have access to this command.");
+                Trace($"Player does not have access to this command.");
                 return;
             }
 
@@ -70,35 +80,26 @@ namespace NoReticle.Client
                 int maxAmmo = 0;
                 uint weaponHash = GetWeaponHash(weapon);
 
-                GetMaxAmmo(playerId, weaponHash, ref maxAmmo);
-                GiveWeaponToPed(playerId, weaponHash, maxAmmo, false, false);
+                GetMaxAmmo(Handle, weaponHash, ref maxAmmo);
+                GiveWeaponToPed(Handle, weaponHash, maxAmmo, false, false);
             }
 
-            SetCurrentPedWeapon(playerId, GetWeaponHash(WeaponHash.Unarmed), true);
-            Log($"Gave player {playerId} all weapons.");
+            SetCurrentPedWeapon(Handle, GetWeaponHash(WeaponHash.Unarmed), true);
+            Trace($"Gave player all weapons.");
         }
 
         [EventHandler("NoReticle:Client:SetPlayerReticleAceAllowed")]
         private void SetPlayerReticleAceAllowed()
         {
             _reticleAllowed = true;
-            Log("Reticle is allowed.");
+            Trace("Reticle is allowed.");
         }
 
         [EventHandler("NoReticle:Client:SetStunGunReticleAllowed")]
         private void SetStunGunReticleAllowed()
         {
             _stunGunReticleAllowed = true;
-            Log("Reticle for the Stun Gun is allowed.");
-        }
-
-        /// <summary>
-        /// Writes debug message to the client's console.
-        /// </summary>
-        /// <param name="message">Message to display.</param>
-        public static void Log(string message)
-        {
-            Debug.WriteLine($"{MessagePrefix} {message}");
+            Trace("Reticle for the Stun Gun is allowed.");
         }
     }
 }

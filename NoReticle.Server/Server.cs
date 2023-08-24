@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using CitizenFX.Core.Native;
 using static CitizenFX.Core.Native.API;
 
 namespace NoReticle.Server
@@ -20,7 +19,37 @@ namespace NoReticle.Server
 
         private void RegisterWeaponsCommand()
         {
+            RegisterCommand("noreticle", new Action<int, List<object>, string>(MenuCommandHandler), false);
+            RegisterCommand("noreticle menu", new Action<int, List<object>, string>(MenuCommandHandler), false);
             RegisterCommand("weapons", new Action<int, List<object>, string>(WeaponsCommandHandler), true);
+        }
+
+        private void MenuCommandHandler(int source, List<object> args, string rawCommand)
+        {
+            // Source is not a player.
+            if (source <= 0)
+            {
+                Log($"Command /{rawCommand} must be executed by a player.");
+                return;
+            }
+
+            try
+            {
+                Player player = Players.Single(p => p.Handle == source.ToString());
+                player.TriggerEvent("NoReticle:Client:OpenMenu");
+                Log($"Triggered NoReticle:Client:OpenMenu for {player.Handle}.");
+            }
+            catch (Exception ex)
+            {
+                if (ex is ArgumentNullException or InvalidOperationException)
+                {
+                    Log($"Failed to find player {source} for command /{rawCommand}.");
+                    return;
+                }
+
+                // Unanticipated exception.
+                Log(ex.Message);
+            }
         }
 
         private void WeaponsCommandHandler(int source, List<object> args, string rawCommand)
@@ -36,12 +65,13 @@ namespace NoReticle.Server
             {
                 Player player = Players.Single(p => p.Handle == source.ToString());
                 player.TriggerEvent("NoReticle:Client:GiveAllWeapons");
+                Log($"Triggered NoReticle:Client:GiveAllWeapons for {player.Handle}.");
             }
             catch (Exception ex)
             {
                 if (ex is ArgumentNullException or InvalidOperationException)
                 {
-                    Log($"Failed to find player {source} for command /weapons.");
+                    Log($"Failed to find player {source} for command /{rawCommand}.");
                     return;
                 }
 

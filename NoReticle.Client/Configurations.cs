@@ -1,4 +1,5 @@
 ﻿using CitizenFX.Core;
+using static NoReticle.Client.ClientLog;
 
 namespace NoReticle.Client
 {
@@ -55,11 +56,11 @@ namespace NoReticle.Client
                     HideAircraftReticle = value;
                     break;
                 default:
-                    Client.Log($"Failed to update '{key}' to '{stringValue}'.");
+                    Trace($"Failed to update '{key}' to '{stringValue}'.");
                     return;
             }
 
-            Client.Log($"Updated '{key}' to '{stringValue}'.");
+            Trace($"Updated '{key}' to '{stringValue}'.");
         }
     }
 }
