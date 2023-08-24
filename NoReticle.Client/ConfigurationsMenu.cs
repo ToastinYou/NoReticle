@@ -9,8 +9,6 @@ namespace NoReticle.Client
 {
     public class ConfigurationsMenu
     {
-        private const Control MenuToggleKey = Control.SelectWeaponUnarmed;
-
         // Create the main menu.
         private static readonly Menu Menu = new("NoReticle", "Configuration Menu");
 
@@ -37,6 +35,11 @@ namespace NoReticle.Client
                 Trace($"Opened {sender.MenuTitle} Menu.");
             };
 
+            Menu.OnMenuClose += (sender) =>
+            {
+                MenuController.DisableMenuButtons = true; // Prevent menu from opening via keypress.
+            };
+
             Menu.OnListIndexChange += (menu, listItem, previousIndex, currentIndex, realIndex) =>
             {
                 if (giveAllWeaponsCommandConfiguration is { Selected: true })
@@ -59,11 +62,12 @@ namespace NoReticle.Client
 
             MenuController.AddMenu(Menu);
             MenuController.MainMenu = Menu;
-            MenuController.MenuToggleKey = MenuToggleKey;
+            MenuController.DisableMenuButtons = true; // Prevent menu from opening via keypress.
         }
 
         public static void OpenMenu()
         {
+            MenuController.DisableMenuButtons = false; // Allow movement within menu via keypress.
             Menu.OpenMenu();
             Trace($"Opened {Menu.MenuTitle} Menu.");
         }
