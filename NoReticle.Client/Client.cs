@@ -101,5 +101,26 @@ namespace NoReticle.Client
             _stunGunReticleAllowed = true;
             Trace("Reticle for the Stun Gun is allowed.");
         }
+
+        public new static void TriggerEvent(string eventName, params object[] args)
+        {
+            // Why? Well, because I do not want each class to have to inherit from BaseScript.
+            BaseScript.TriggerEvent(eventName, args);
+        }
+    }
+
+    public static class Chat
+    {
+        private static readonly int[] DefaultColor = { 255, 255, 255 };
+        private static readonly string DefaultSendersName = GetPlayerName(PlayerId());
+
+        public static void Send(string message, int[]? color = null, string? sendersName = null, bool multiline = true)
+        {
+            color ??= DefaultColor;
+            sendersName ??= DefaultSendersName;
+
+            string[] args = { sendersName, message };
+            Client.TriggerEvent("chat:addMessage", new { color, multiline, args });
+        }
     }
 }
