@@ -1,4 +1,5 @@
 ﻿using CitizenFX.Core;
+using NoReticle.Shared;
 using System.Runtime.CompilerServices;
 using static NoReticle.Client.Client;
 
@@ -6,15 +7,13 @@ namespace NoReticle.Client
 {
     public static class ClientLog
     {
-        public static readonly string MessagePrefix = "[NoReticle]:";
-
         /// <summary>
         /// Writes a debug message to the client's console.
         /// </summary>
         /// <param name="message">Message to display.</param>
         public static void Log(string message)
         {
-            Debug.WriteLine($"{MessagePrefix} ({Handle}) {message}");
+            Debug.WriteLine($"{Constants.Prefix} ({Handle}) {message}");
         }
 
         /// <summary>

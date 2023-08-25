@@ -1,6 +1,6 @@
-﻿using CitizenFX.Core;
-using CitizenFX.Core.UI;
+﻿using CitizenFX.Core.UI;
 using MenuAPI;
+using NoReticle.Shared;
 using System;
 using System.Collections.Generic;
 using static NoReticle.Client.ClientLog;
@@ -48,7 +48,7 @@ namespace NoReticle.Client
                     Configurations.Update(Configurations.KeyEnableGiveAllWeaponsCommand, value, false);
 
                     string result = value ? "Enabled" : "Disabled";
-                    Screen.ShowNotification($"{MessagePrefix} {result} give all weapons command, /weapons.");
+                    Screen.ShowNotification($"{Constants.Prefix} {result} give all weapons command, /weapons.");
                 }
                 else if (hideAircraftReticleConfiguration is { Selected: true })
                 {
@@ -56,7 +56,7 @@ namespace NoReticle.Client
                     Configurations.Update(Configurations.KeyHideAircraftReticle, value, false);
 
                     string result = value ? "hidden" : "visible";
-                    Screen.ShowNotification($"{MessagePrefix} Aircraft reticle {result}.");
+                    Screen.ShowNotification($"{Constants.Prefix} Aircraft reticle {result}.");
                 }
             };
 
