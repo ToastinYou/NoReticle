@@ -1,9 +1,9 @@
 ﻿using CitizenFX.Core.UI;
 using MenuAPI;
-using NoReticle.Shared;
 using System;
 using System.Collections.Generic;
 using static NoReticle.Client.ClientLog;
+using static NoReticle.Shared.Shared;
 
 namespace NoReticle.Client
 {

@@ -1,7 +1,7 @@
 ﻿using CitizenFX.Core;
-using NoReticle.Shared;
 using System.Runtime.CompilerServices;
 using static NoReticle.Client.Client;
+using static NoReticle.Shared.Shared;
 
 namespace NoReticle.Client
 {

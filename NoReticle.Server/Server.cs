@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using static CitizenFX.Core.Native.API;
+using static NoReticle.Shared.Shared;
 
 namespace NoReticle.Server
 {
@@ -179,13 +180,10 @@ namespace NoReticle.Server
         {
             string playerId = player.Handle;
 
-            if (IsPlayerAceAllowed(playerId, "Reticle"))
+            foreach (AcePermission acePermission in AcePermissions)
             {
-                player.TriggerEvent("NoReticle:Client:SetPlayerReticleAceAllowed");
-            }
-            if (IsPlayerAceAllowed(playerId, "ReticleStunGun"))
-            {
-                player.TriggerEvent("NoReticle:Client:SetStunGunReticleAllowed");
+                acePermission.Value = IsPlayerAceAllowed(playerId, acePermission.Key);
+                Log($"({playerId}) Retrieved {acePermission.Value} from {acePermission.Key}.");
             }
         }
 

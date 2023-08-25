@@ -3,6 +3,7 @@ using System;
 using System.Threading.Tasks;
 using static CitizenFX.Core.Native.API;
 using static NoReticle.Client.ClientLog;
+using static NoReticle.Shared.Shared;
 
 namespace NoReticle.Client
 {
@@ -10,8 +11,6 @@ namespace NoReticle.Client
     {
         /// <returns>The current player's handle (ID), or -1 if the ID cannot be found.</returns>
         public static int Handle => Game.PlayerPed?.Handle ?? -1;
-
-        private bool _reticleAllowed, _stunGunReticleAllowed;
 
         public Client()
         {
@@ -34,12 +33,12 @@ namespace NoReticle.Client
         {
             Weapon w = Game.PlayerPed?.Weapons?.Current;
 
-            if (!_reticleAllowed && w != null)
+            if (!Reticle.Value && w != null)
             {
                 bool isMusket = w.Hash == WeaponHash.Musket;
                 bool isSniper = w.Group == WeaponGroup.Sniper && IsFirstPersonAimCamActive();
                 bool isUnarmed = w.Group == WeaponGroup.Unarmed;
-                bool isStunGun = _stunGunReticleAllowed && w.Group == WeaponGroup.Stungun;
+                bool isStunGun = ReticleStunGun.Value && w.Group == WeaponGroup.Stungun;
                 bool isAircraft = w.Group == 0 && !Configurations.HideAircraftReticle;
 
                 if (isMusket || !(isSniper || isUnarmed || isStunGun || isAircraft))
@@ -86,20 +85,6 @@ namespace NoReticle.Client
 
             SetCurrentPedWeapon(Handle, GetWeaponHash(WeaponHash.Unarmed), true);
             Trace($"Gave player all weapons.");
-        }
-
-        [EventHandler("NoReticle:Client:SetPlayerReticleAceAllowed")]
-        private void SetPlayerReticleAceAllowed()
-        {
-            _reticleAllowed = true;
-            Trace("Reticle is allowed.");
-        }
-
-        [EventHandler("NoReticle:Client:SetStunGunReticleAllowed")]
-        private void SetStunGunReticleAllowed()
-        {
-            _stunGunReticleAllowed = true;
-            Trace("Reticle for the Stun Gun is allowed.");
         }
 
         public new static void TriggerEvent(string eventName, params object[] args)
