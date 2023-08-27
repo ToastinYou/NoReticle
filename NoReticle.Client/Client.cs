@@ -15,7 +15,6 @@ namespace NoReticle.Client
         public Client()
         {
             EventHandlers.Add("onClientResourceStart", new Action<string>(OnClientResourceStart));
-            Tick += OnTick;
         }
 
         private void OnClientResourceStart(string resourceName)
