@@ -7,7 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoReticle.Client", "NoRetic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoReticle.Server", "NoReticle.Server\NoReticle.Server.csproj", "{980F4CA9-BCB5-4A47-8E65-94E14B0A32BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoReticle.Shared", "NoReticle.Shared\NoReticle.Shared.csproj", "{0AF4404F-3623-4E70-AE1F-BA37623DB047}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8C215944-6ADB-416F-91BB-0D66CEFC0195}"
+	ProjectSection(SolutionItems) = preProject
+		NoReticle.Shared\Shared.cs = NoReticle.Shared\Shared.cs
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +26,6 @@ Global
 		{980F4CA9-BCB5-4A47-8E65-94E14B0A32BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{980F4CA9-BCB5-4A47-8E65-94E14B0A32BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{980F4CA9-BCB5-4A47-8E65-94E14B0A32BF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0AF4404F-3623-4E70-AE1F-BA37623DB047}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0AF4404F-3623-4E70-AE1F-BA37623DB047}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0AF4404F-3623-4E70-AE1F-BA37623DB047}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0AF4404F-3623-4E70-AE1F-BA37623DB047}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
